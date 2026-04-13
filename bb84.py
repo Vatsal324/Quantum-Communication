@@ -1,8 +1,6 @@
 # BB84 Quantum Key Distribution Simulation
 import numpy as np
 
-rng= np.random.default_rng(482)
-
 def alice_prepare_many(n,rng):
     bits = rng.integers(0,2,size=n)
     basis = rng.integers(0,2,size=n)
@@ -52,11 +50,12 @@ def eve(alice_bits, alice_basis, frac, rng):
 
 
 
-
-for eve_frac in [0.0, 0.25, 0.50, 1.0]:
-    abits, abasis = alice_prepare_many(10000, rng)
-    ebits, ebasis = eve(abits, abasis, eve_frac, rng)
-    bbits, bbasis = bob_measure_many(ebits,ebasis, rng)
-    sift_a,sift_b, basis = sift(abits,abasis, bbits, bbasis)
-    QBER,akey,bkey = estimate_qber(sift_a,sift_b,1/10,rng)
-    print(f"Eve={eve_frac:.0%}  QBER={QBER*100:.1f}%")
+if __name__ == '__main__':
+    rng = np.random.default_rng(482)
+    for eve_frac in [0.0, 0.25, 0.50, 1.0]:
+        abits, abasis = alice_prepare_many(10000, rng)
+        ebits, ebasis = eve(abits, abasis, eve_frac, rng)
+        bbits, bbasis = bob_measure_many(ebits, ebasis, rng)
+        sift_a, sift_b, basis = sift(abits, abasis, bbits, bbasis)
+        QBER, akey, bkey = estimate_qber(sift_a, sift_b, 1/10, rng)
+        print(f"Eve={eve_frac:.0%}  QBER={QBER*100:.1f}%")
